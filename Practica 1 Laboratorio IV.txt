@@ -1,0 +1,28 @@
+dnf install httpd
+cd /var/www/html
+mkdir bienvenida
+mkdir credenciales
+cd bienvenida/
+nano index.html
+nano /etc/httpd/conf/httpd.conf
+clear
+systemctl enable --now httpd
+nano /etc/httpd/conf/httpd.conf
+systemctl enable --now httpd
+clear
+hostname -I
+cd /var/www/html
+ls
+cd credenciales/
+nano index.html
+nano /etc/httpd/conf/httpd.conf
+systemctl restart httpd
+nano /etc/httpd/conf/httpd.conf
+cd credenciales/
+cd /var/www/html
+ls
+cd credenciales/
+nano index.html
+systemctl restart httpd
+clear
+history
