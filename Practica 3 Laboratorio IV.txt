@@ -1,0 +1,14 @@
+systemctl restart httpd
+clear
+exit
+dnf install apel-release
+dnf install epel-release
+dnf install cups cups-pdf -y
+nano /etc/cups/cupsd.conf
+systemctl enable --now firewalld
+firewall-cmd --add-port=631/tcp --permanent
+firewall-cmd --reaload
+firewall-cmd --reload
+systemctl restart cups
+clear
+history
