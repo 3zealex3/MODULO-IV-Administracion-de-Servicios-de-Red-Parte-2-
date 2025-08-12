@@ -1,27 +1,22 @@
-Instalación de servidor de correo
+---------------------Instalación de servidor de correo----------------------
 
+sudo dnf install postfix cyrus-sasl cyrus-sasl-plain mailx -y
+sudo systemctl enable --now postfix
+
+
+--------------------Crear archivo de credenciales:--------------------
 
 /etc/postfix/sasl_passwd
 
+Añadir:
 [smtp.gmail.com]:587    tu-email@gmail.com:contraseña-de-aplicación
 
-
+------------------------Proteger el archivo:-------------------------------
 sudo postmap /etc/postfix/sasl_passwd
 sudo chmod 600 /etc/postfix/sasl_passwd
 
 
-
-sudo nano /etc/postfix/master.cf
-
-
-submission inet n       -       n       -       -       smtpd
-  -o syslog_name=postfix/submission
-  -o smtpd_tls_security_level=encrypt
-  -o smtpd_sasl_auth_enable=yes
-  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
-
-
-
+--------------------Configurar Postfix (main.cf)--------------------------
 sudo nano /etc/postfix/main.cf
 
 ----Activar opciones de mi dominio--------------
@@ -41,6 +36,28 @@ smtp_tls_security_level = encrypt
 smtp_tls_wrappermode = no
 smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt
 
-dnf install mail
 
+-----------------Habilitar Submission-------------------------
+
+sudo nano /etc/postfix/master.cf
+
+submission inet n       -       n       -       -       smtpd
+  -o syslog_name=postfix/submission
+  -o smtpd_tls_security_level=encrypt
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+
+
+--------------------Configurar Firewall----------------
+
+sudo firewall-cmd --add-port={25,587}/tcp --permanent
+sudo firewall-cmd --reload
+
+
+------------Reiniciar Postfix---------------------
+
+sudo systemctl restart postfix
+
+
+----------------Probar correo--------------------------------
 echo "Test" | mail -s "Prueba Relay" correo-a-quien-se-le-enviara
