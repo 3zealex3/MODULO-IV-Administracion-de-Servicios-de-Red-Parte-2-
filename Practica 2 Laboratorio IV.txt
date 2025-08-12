@@ -1,0 +1,46 @@
+Instalación de servidor de correo
+
+
+/etc/postfix/sasl_passwd
+
+[smtp.gmail.com]:587    tu-email@gmail.com:contraseña-de-aplicación
+
+
+sudo postmap /etc/postfix/sasl_passwd
+sudo chmod 600 /etc/postfix/sasl_passwd
+
+
+
+sudo nano /etc/postfix/master.cf
+
+
+submission inet n       -       n       -       -       smtpd
+  -o syslog_name=postfix/submission
+  -o smtpd_tls_security_level=encrypt
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+
+
+
+sudo nano /etc/postfix/main.cf
+
+----Activar opciones de mi dominio--------------
+----Todas las interfaces inet------------------
+-----Todos los protocolos inet-------------------
+-----2da opcion de domain------------------------
+-----my networks poner la red ---------------------
+
+
+------Al final del archivo agregar esto---------------------
+
+relayhost = [smtp.gmail.com]:587
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_tls_security_level = encrypt
+smtp_tls_wrappermode = no
+smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt
+
+dnf install mail
+
+echo "Test" | mail -s "Prueba Relay" correo-a-quien-se-le-enviara
