@@ -1,28 +1,86 @@
-dnf install httpd
+---------------Instalación y configuración básica de Apache-------------------
+
+sudo dnf install httpd -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo systemctl status httpd
+
+----------------Configuración del primer sitio web (Hola Mundo)---------------------
+
 cd /var/www/html
-mkdir bienvenida
-mkdir credenciales
-cd bienvenida/
-nano index.html
-nano /etc/httpd/conf/httpd.conf
-clear
-systemctl enable --now httpd
-nano /etc/httpd/conf/httpd.conf
-systemctl enable --now httpd
-clear
-hostname -I
+sudo mkdir Hola
+cd Hola
+sudo nano index.html
+
+---------------------Contenido del archivo index.html para el sitio Hola-----------------
+
+<!DOCTYPE html>
+<html>
+<head><title>Hola Mundo</title></head>
+<body><h1>Hola Mundo</h1></body>
+</html>
+
+------------------------Configuración del VirtualHost:-------------------------
+
+sudo nano /etc/httpd/conf/httpd.conf
+
+<VirtualHost *:80>
+     ServerName hola.localhost
+     DocumentRoot "/var/www/html/Hola"
+     ServerAdmin eze-20242286@localhost
+</VirtualHost>
+
+
+Reiniciar Apache y configurar hosts:
+
+sudo systemctl restart httpd
+sudo nano /etc/hosts
+
+Añadir:
+127.0.0.1    hola.localhost
+
+--------------------Configuración del segundo sitio web (Personal)-----------------------
+
 cd /var/www/html
-ls
-cd credenciales/
-nano index.html
-nano /etc/httpd/conf/httpd.conf
-systemctl restart httpd
-nano /etc/httpd/conf/httpd.conf
-cd credenciales/
-cd /var/www/html
-ls
-cd credenciales/
-nano index.html
-systemctl restart httpd
-clear
-history
+sudo mkdir estudiante
+cd estudiante
+sudo nano index.html
+
+--------------------Contenido del archivo index.html personalizado:-------------------
+
+<!DOCTYPE html>
+<html>
+<head><title>Estudiante</title></head>
+<body>
+<h2>Ezequiel Castillo</h2>
+<p>Matrícula: 20242286</p>
+<p>Materia: Sistemas Operativos III<br>
+Docente: Adrian Alcántara</p>
+</body>
+</html>
+
+--------------------Configuración adicional en httpd.conf:--------------------------
+
+Configuración adicional en httpd.conf:
+
+Listen 8080
+
+Añadir:
+<VirtualHost *:8080>
+     ServerName estudiante.localhost
+     DocumentRoot "/var/www/html/estudiante"
+     ServerAdmin eze-20242286@localhost
+</VirtualHost>
+
+-----------------------Finalizar configuración:---------------------------------
+
+sudo systemctl restart httpd
+sudo nano /etc/hosts
+
+Añadir:
+127.0.0.1    estudiante.localhost
+
+
+
+
+
